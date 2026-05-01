@@ -29,7 +29,7 @@
                 <div id="fileInfo" class="file-info hidden">
                     <p>File: <span id="fileName"></span></p>
                     <p>Duration: <span id="fileDuration"></span> seconds</p>
-                    <button onclick="startGame()" class="btn-play">START GAME</button>
+                    <button onclick="startCountdown()" class="btn-play">START GAME</button>
                 </div>
                 <button onclick="showMainMenu()" class="btn-back">BACK</button>
             </div>
@@ -60,12 +60,17 @@
             </div>
         </div>
 
+        <!-- Countdown Screen -->
+        <div id="countdownScreen" class="countdown-screen">
+            <div class="countdown-content">
+                <div id="countdownNumber" class="countdown-number">3</div>
+                <p>GET READY!</p>
+            </div>
+        </div>
+
         <!-- Game Screen -->
         <div id="gameScreen" class="game-screen">
             <div class="game-header">
-                <div class="health-bar">
-                    <div id="healthFill" class="health-fill"></div>
-                </div>
                 <div class="score">Score: <span id="score">0</span></div>
                 <div class="combo">Combo: <span id="combo">0</span></div>
             </div>
