@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Hero - Guitar Hero with MP3 Music</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Main Menu -->
+        <div id="mainMenu" class="menu active">
+            <div class="menu-content">
+                <h1>🎸 CODE HERO</h1>
+                <p>Play Guitar Hero with your favorite MP3 music!</p>
+                <button onclick="showImportMenu()" class="btn-play">PLAY</button>
+                <button onclick="showInstructions()" class="btn-info">HOW TO PLAY</button>
+            </div>
+        </div>
+
+        <!-- Import Menu -->
+        <div id="importMenu" class="menu">
+            <div class="menu-content">
+                <h2>📁 IMPORT MP3 FILE</h2>
+                <div class="file-input-wrapper">
+                    <input type="file" id="audioFile" accept=".mp3,audio/mpeg" onchange="loadAudioFile()">
+                    <label for="audioFile" class="file-label">CHOOSE MP3 FILE</label>
+                </div>
+                <div id="fileInfo" class="file-info hidden">
+                    <p>File: <span id="fileName"></span></p>
+                    <p>Duration: <span id="fileDuration"></span> seconds</p>
+                    <button onclick="startGame()" class="btn-play">START GAME</button>
+                </div>
+                <button onclick="showMainMenu()" class="btn-back">BACK</button>
+            </div>
+        </div>
+
+        <!-- Instructions Menu -->
+        <div id="instructionsMenu" class="menu">
+            <div class="menu-content">
+                <h2>📖 HOW TO PLAY</h2>
+                <div class="instructions">
+                    <p><strong>1. Import an MP3 file</strong> from your device</p>
+                    <p><strong>2. Hit the falling notes</strong> as they reach the strike zone</p>
+                    <p><strong>3. Use these keys:</strong></p>
+                    <div class="key-guide">
+                        <div class="key">A - Lane 1</div>
+                        <div class="key">S - Lane 2</div>
+                        <div class="key">D - Lane 3</div>
+                        <div class="key">F - Lane 4</div>
+                    </div>
+                    <p><strong>Scoring:</strong></p>
+                    <ul>
+                        <li>Perfect: 100 points</li>
+                        <li>Good: 50 points</li>
+                        <li>Combo multiplier: x2, x4, x8+</li>
+                    </ul>
+                </div>
+                <button onclick="showMainMenu()" class="btn-back">BACK</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="gameScreen" class="game-screen">
+            <div class="game-header">
+                <div class="health-bar">
+                    <div id="healthFill" class="health-fill"></div>
+                </div>
+                <div class="score">Score: <span id="score">0</span></div>
+                <div class="combo">Combo: <span id="combo">0</span></div>
+            </div>
+
+            <div class="game-area">
+                <div id="notesContainer" class="notes-container"></div>
+                
+                <div class="strike-zone">
+                    <div class="lane" data-lane="0">
+                        <span class="lane-key">A</span>
+                    </div>
+                    <div class="lane" data-lane="1">
+                        <span class="lane-key">S</span>
+                    </div>
+                    <div class="lane" data-lane="2">
+                        <span class="lane-key">D</span>
+                    </div>
+                    <div class="lane" data-lane="3">
+                        <span class="lane-key">F</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="menu">
+            <div class="menu-content game-over">
+                <h2>GAME OVER</h2>
+                <div class="stats">
+                    <p>Final Score: <span id="finalScore">0</span></p>
+                    <p>Max Combo: <span id="maxCombo">0</span></p>
+                    <p>Accuracy: <span id="accuracy">0</span>%</p>
+                </div>
+                <button onclick="showImportMenu()" class="btn-play">PLAY AGAIN</button>
+                <button onclick="showMainMenu()" class="btn-back">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+    <script src="game.js"></script>
+</body>
+</html>
