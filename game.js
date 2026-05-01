@@ -3,7 +3,6 @@ const gameState = {
     score: 0,
     combo: 0,
     maxCombo: 0,
-    health: 100,
     notes: [],
     isPlaying: false,
     currentTime: 0,
@@ -21,7 +20,7 @@ const KEYS = {
 };
 
 const STRIKE_ZONE = {
-    top: window.innerHeight - 120,
+    top: window.innerHeight - 140,
     bottom: window.innerHeight,
     tolerance: 50 // pixels
 };
@@ -83,7 +82,6 @@ function startGame() {
     gameState.score = 0;
     gameState.combo = 0;
     gameState.maxCombo = 0;
-    gameState.health = 100;
     gameState.notes = [];
     gameState.perfectHits = 0;
     gameState.goodHits = 0;
@@ -162,17 +160,21 @@ function createNoteElement(note) {
     noteEl.style.left = (note.lane * laneWidth + 2) + 'px';
     noteEl.style.width = (laneWidth - 4) + 'px';
     
-    // Calculate animation duration based on when note should arrive
-    const timeUntilStrike = (STRIKE_ZONE.top / window.innerHeight) * (note.time + 2000 - gameState.currentTime);
-    const fallDuration = Math.max(2, timeUntilStrike / 1000); // minimum 2 seconds
+    // Calculate when this note should reach the strike zone
+    const timeToStrike = note.time - gameState.currentTime;
+    const fallDuration = Math.max(2, timeToStrike / 1000);
     
+    // Calculate current progress through animation
+    const elapsedTime = gameState.currentTime - (note.time - timeToStrike);
+    const progress = Math.max(0, elapsedTime / (fallDuration * 1000));
+    
+    // Set animation
     noteEl.style.animation = `fall ${fallDuration}s linear forwards`;
-    noteEl.style.animationDelay = '0s';
     
-    // Set custom animation start position
-    const currentProgress = (gameState.currentTime - note.time + 2000) / (fallDuration * 1000);
-    if (currentProgress > 0) {
-        noteEl.style.transform = `translateY(${window.innerHeight * currentProgress}px)`;
+    // If note is already partway down, adjust the transform
+    if (progress > 0 && progress < 1) {
+        const currentY = window.innerHeight * progress;
+        noteEl.style.transform = `translateY(${currentY}px)`;
         noteEl.style.animation = `none`;
     }
     
@@ -232,14 +234,14 @@ function hitNote(lane) {
         
         gameState.combo++;
         gameState.maxCombo = Math.max(gameState.maxCombo, gameState.combo);
-        gameState.health = Math.min(100, gameState.health + 5);
         
         // Visual feedback
         const lane = document.querySelector(`.lane[data-lane="${lane}"]`);
         lane.classList.add('hit');
         setTimeout(() => lane.classList.remove('hit'), 100);
         
-        // Remove element
+        // Remove element with scale animation
+        bestNote.element.style.animation = 'hitPop 0.3s ease-out forwards';
         setTimeout(() => bestNote.element.remove(), 300);
     }
 }
@@ -249,24 +251,17 @@ function missNote(note) {
     note.missed = true;
     gameState.combo = 0;
     gameState.misses++;
-    gameState.health = Math.max(0, gameState.health - 10);
     
     note.element.classList.add('miss');
     setTimeout(() => note.element.remove(), 300);
     
     updateUI();
-    
-    if (gameState.health <= 0) {
-        gameState.isPlaying = false;
-        endGame();
-    }
 }
 
 // Update UI
 function updateUI() {
     document.getElementById('score').textContent = gameState.score;
     document.getElementById('combo').textContent = gameState.combo;
-    document.getElementById('healthFill').style.width = gameState.health + '%';
 }
 
 // End Game
